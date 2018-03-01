@@ -12,18 +12,19 @@ public class SSQSystem {
 	private double clock;
 	private int qSize;
 	private int departures;
+	private ArrayList<Integer> occupancy;
 	private final int MAX_DEPARTURES = 100000;
 
 	public SSQSystem() {
 		this.server = new Server();
 		this.eventList = new ArrayList<Event>();
 		this.IATimes = new ArrayList<Double>();
+		this.occupancy = new ArrayList<Integer>();
 		this.clock = 0;
 		qSize = 0;
 		departures = 0;
 	}
 
-	 /* methods to be added here */
 	public void run() {
 		initialize();
 		while(!eventList.isEmpty()) {	//while there is a next event
@@ -60,6 +61,7 @@ public class SSQSystem {
 			else if (e.getType().equals("departure")){
 				qSize--;
 				departures++;
+				occupancy.add(qSize + departures);
 				if(departures == MAX_DEPARTURES){
 					return;
 				}
@@ -93,7 +95,11 @@ public class SSQSystem {
 		}
 		return IATimes.remove(0);
 	}
-	
+	public void printOccupancy() {
+		for(Integer i : occupancy) {
+			System.out.println(i);
+		}
+	}
 	public void importTimes() {
 		Scanner scaS, scaIA;
 		String path = "src/files/";
@@ -128,6 +134,7 @@ public class SSQSystem {
 	public static void main(String[] args) {
 		SSQSystem s = new SSQSystem();
 		s.run();
+		s.printOccupancy();
 	}
 
 }
