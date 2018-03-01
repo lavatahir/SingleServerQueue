@@ -25,6 +25,7 @@ public class SSQSystem {
 
 	 /* methods to be added here */
 	public void run() {
+		initialize();
 		while(!eventList.isEmpty()) {	//while there is a next event
 			Event e = eventList.get(0);	//take first future event
 			clock = e.getTime();
@@ -60,7 +61,6 @@ public class SSQSystem {
 				qSize--;
 				departures++;
 				if(departures == MAX_DEPARTURES){
-					//stop();
 					return;
 				}
 				
@@ -96,7 +96,7 @@ public class SSQSystem {
 	
 	public void importTimes() {
 		Scanner scaS, scaIA;
-		String path = "src/files";
+		String path = "src/files/";
 		String service = "serviceTimes-100K.txt";
 		String interArrivals = "interArrivalTimes-100K.txt";
 		
