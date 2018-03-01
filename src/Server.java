@@ -18,6 +18,7 @@ public class Server {
 		serviceTimes = stimes;
 	}
 	
+	
 	public double getServiceTime(){
 		return serviceTimes.remove(0);
 		
