@@ -23,4 +23,8 @@ public class Server {
 		return serviceTimes.remove(0);
 		
 	}
+	
+	public ArrayList<Double> getServiceTimes(){
+		return serviceTimes;
+	}
 }
