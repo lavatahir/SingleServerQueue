@@ -20,6 +20,7 @@ public class SSQSystem {
 	private ArrayList<Double> arrivalTimes;
 	private ArrayList<Double> queueDelayTimes;
 	private ArrayList<Double> completionTimes;
+	private int probabilityCounter;;
 	
 	public SSQSystem() {
 		server = new Server();
@@ -33,6 +34,7 @@ public class SSQSystem {
 		clock = 0;
 		qSize = 0;
 		departures = 0;
+		probabilityCounter = 0;
 	}
 
 	public void run() {
@@ -40,12 +42,23 @@ public class SSQSystem {
 		while(!eventList.isEmpty()) {	//while there is a next event
 			Event e = eventList.get(0);	//take first future event
 			clock = e.getTime();
-			
+			if((e.getTime() >= (double) 499.9999 && e.getTime() <= (double) 500.0001) ||
+			(e.getTime() >= (double) 4999.9999 && e.getTime() <= (double) 5001.0001) ||
+			(e.getTime() >= (double) 9999.9999 && e.getTime() <= (double) 10001.0001)){
+				System.out.println("CONTENTS OF SYSTEM AT TIME " + e.getTime());
+				printEventList();
+				System.out.println("Is Server Busy: " + server.isBusy());
+				System.out.println("Server Utilization: " + computeAvgServerUte(e.getTime()));
+			}
 			if(e.getType().equals("arrival")) {
 				qSize++;
 				if(!server.isBusy()) {
 					server.setBusy(true);
 					Event ev = new Event("departure", server.getServiceTime()+clock);
+					
+					
+					
+					
 					int pos = -1;
 					
 					for(Event event : eventList) {
@@ -71,7 +84,12 @@ public class SSQSystem {
 			else if (e.getType().equals("departure")){
 				qSize--;
 				departures++;
-				occupancy.add(qSize + departures);
+				if(server.isBusy()){
+					occupancy.add(qSize + 1);	
+				}
+				else if(!server.isBusy()){
+					occupancy.add(qSize);
+				}
 				if(departures == MAX_DEPARTURES){
 					return;
 				}
@@ -93,6 +111,12 @@ public class SSQSystem {
 		}
 	}
 
+	private void printEventList() {
+		for(Event e : eventList){
+			e.print();
+		}
+	}
+
 	public void computeArrivalTimes() {
 		System.out.println("WE STARTING");
 		for(int i = 1; i < MAX_DEPARTURES; i++) {
@@ -106,8 +130,6 @@ public class SSQSystem {
 		
 		while(i < MAX_DEPARTURES-1) {
 			i++;
-			System.out.println("A"+arrivalTimes.size());
-			System.out.println("C"+completionTimes.size());
 			if(arrivalTimes.get(i) < completionTimes.get(i-1)) {
 				queueDelayTimes.add(i-1, (completionTimes.get(i-1) - arrivalTimes.get(i)));
 			}
@@ -135,8 +157,8 @@ public class SSQSystem {
 	public void computeTotalWaitTimes() {
 		
 	}
-	public void computeAvgServerUte() {
-		
+	public double computeAvgServerUte(double time) {
+		return -1;
 	}
 	public void importTimes() {
 		Scanner scaS, scaIA;
