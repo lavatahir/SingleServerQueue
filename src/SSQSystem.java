@@ -3,6 +3,7 @@ import java.io.FileReader;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -20,7 +21,7 @@ public class SSQSystem {
 	private ArrayList<Double> arrivalTimes;
 	private ArrayList<Double> queueDelayTimes;
 	private ArrayList<Double> completionTimes;
-	private int probabilityCounter;;
+	private int probabilityCounter;
 	
 	public SSQSystem() {
 		server = new Server();
@@ -42,14 +43,16 @@ public class SSQSystem {
 		while(!eventList.isEmpty()) {	//while there is a next event
 			Event e = eventList.get(0);	//take first future event
 			clock = e.getTime();
+			
 			if((e.getTime() >= (double) 499.9999 && e.getTime() <= (double) 500.0001) ||
 			(e.getTime() >= (double) 4999.9999 && e.getTime() <= (double) 5001.0001) ||
 			(e.getTime() >= (double) 9999.9999 && e.getTime() <= (double) 10001.0001)){
 				System.out.println("CONTENTS OF SYSTEM AT TIME " + e.getTime());
 				printEventList();
 				System.out.println("Is Server Busy: " + server.isBusy());
-				System.out.println("Server Utilization: " + computeAvgServerUte(e.getTime()));
+				System.out.println("Server Utilization: " + getUtili(1));
 			}
+			
 			if(e.getType().equals("arrival")) {
 				qSize++;
 				if(!server.isBusy()) {
@@ -111,6 +114,17 @@ public class SSQSystem {
 		}
 	}
 
+	private double getUtili(double clock) {
+		int index = server.getServiceTimes().indexOf(clock);
+		List<Double> sublist = server.getServiceTimes().subList(0, index);
+		int i;
+		double sum = 0;
+		for(i = 1; i < sublist.size(); i++) {
+		    sum += sublist.get(i);
+		}
+		return sum / clock;
+	}
+
 	private void printEventList() {
 		for(Event e : eventList){
 			e.print();
@@ -156,9 +170,6 @@ public class SSQSystem {
 	}
 	public void computeTotalWaitTimes() {
 		
-	}
-	public double computeAvgServerUte(double time) {
-		return -1;
 	}
 	public void importTimes() {
 		Scanner scaS, scaIA;
