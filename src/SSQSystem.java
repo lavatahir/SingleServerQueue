@@ -50,7 +50,6 @@ public class SSQSystem {
 				System.out.println("CONTENTS OF SYSTEM AT TIME " + e.getTime());
 				printEventList();
 				System.out.println("Is Server Busy: " + server.isBusy());
-				System.out.println("Server Utilization: " + getUtili(1));
 			}
 			
 			if(e.getType().equals("arrival")) {
@@ -88,7 +87,7 @@ public class SSQSystem {
 				qSize--;
 				departures++;
 				if(server.isBusy()){
-					occupancy.add(qSize + 1);	
+					occupancy.add(qSize);	
 				}
 				else if(!server.isBusy()){
 					occupancy.add(qSize);
